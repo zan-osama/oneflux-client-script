@@ -714,6 +714,56 @@ frappe.ui.form.on('Kick Off Meeting', {
 
                                 let row = await addChild(frm, 'kom_sitelist', obj_data, d);
 
+                                // Ladder type validation
+                                if (!data['Ladder Type']) {
+                                    throw {
+                                        error: 'throw',
+                                        message: `Ladder Type cannot be empty at Row ${i + 1}!`
+                                    };
+                                } else if (data['Ladder Type'] !== "New" && data['Ladder Type'] !== "Upgrade") {
+                                    throw {
+                                        error: 'throw',
+                                        message: `Invalid Ladder Type Value at Row ${i + 1}! | ${data['Ladder Type']}`
+                                    };
+                                } else {
+                                    await frappe.model.set_value(
+                                        d.doctype,
+                                        d.name,
+                                        'ladder_type',
+                                        data['Ladder Type']
+                                    );
+                                }
+
+                                // Ladder validation
+                                if (data['Ladder'] === null || data['Ladder'] === undefined || data['Ladder'] === '') {
+                                    throw {
+                                        error: 'throw',
+                                        message: `Ladder cannot be empty at Row ${i + 1}!`
+                                    };
+                                } else if (!Number.isInteger(Number(data['Ladder']))) {
+                                    throw {
+                                        error: 'throw',
+                                        message: `Ladder must be an integer at Row ${i + 1}!`
+                                    };
+                                } else {
+                                    data['Ladder'] = parseInt(data['Ladder'], 10);
+                                    if (data['Ladder'] < 0 || data['Ladder'] > 4) {
+                                        throw {
+                                            error: 'throw',
+                                            message: `Invalid Ladder value at Row ${i + 1}! = ${data['Ladder']}`
+                                        };
+                                    } else {
+                                        console.log(`Debug ==> input ladder success: ${data['Ladder Type']} | ${data['Ladder']}`);
+                                        await frappe.model.set_value(
+                                            d.doctype,
+                                            d.name,
+                                            'ladder',
+                                            data['Ladder']
+                                        );
+                                    }
+                                }
+
+
                                 // if (d.new_tower_info == 'Yes') {
                                 if (!data['Tower Height (m)']) {
 
@@ -2744,7 +2794,7 @@ frappe.ui.form.on('KOM Child Table', {
                         await checkTenantIdReference(tenantId);
                     } else {
                         resetField();
-                        frappe.hide_msgprint();
+                        // frappe.hide_msgprint();
                         frappe.msgprint({
                             title: 'Warning',
                             message: `There's no tenant listed on Site ${siteId}. Please use another Site ID or contact the ticketing support.`,
