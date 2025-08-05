@@ -5,6 +5,7 @@
 /// site_id_ref check to field check_site_owner (Link to tower owner)
 /// site_id_target check to field check_site_on (Mitratel or Non Mitratel)
 /// 25/11: Adjust to add button to update status app form
+/// 3.10.0: Add Ladder Type and Ladder fields to Kick Off Meeting form
 
 /// 8 May 2025 ticket SDP #4045 bugs reseller relocation (wajdi, hamid)
 
@@ -628,7 +629,9 @@ frappe.ui.form.on('Kick Off Meeting', {
                             "Site ID Reference",
                             "Site ID Target",
                             "Height Request (m)",
-                            "Notes/Reason"
+                            "Notes/Reason",
+                            "Ladder Type",
+                            "Ladder"
                         ];
 
                         // Get columns from the uploaded file (from the first row/header)
